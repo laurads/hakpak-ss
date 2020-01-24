@@ -1,2 +1,2 @@
 # hakpak-ss
-HAKPAK-SS: HAmid Khosro PArKing (manager) - Server Side
+HAKPAK-SS: HAmid Khosrow PArKing (manager) - Server Side
