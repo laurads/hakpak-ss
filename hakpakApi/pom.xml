@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>hakpakApi</artifactId>
 	<packaging>war</packaging>
-	<name>hakpakAPI</name>
+	<name>hakpakApi</name>
 	<description>Module des APIs parking</description>
 
 	<parent>
@@ -14,7 +14,7 @@
 	</parent>
 
 	<properties>
-		<context.root>hkpmApi</context.root>
+		<context.root>hakpakApi</context.root>
 		<resource.filter>src/main/filters/filter.default.properties</resource.filter>
 		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
 	</properties>
@@ -44,6 +44,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.0</version>
+            <scope>provided</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
