@@ -1,0 +1,15 @@
+<Context>
+    <!--ENV-RESOURCE-DATASOURCE-->
+    <!--<Resource url="jdbc:oracle:thin:@lh-dastrid02-db.france.airfrance.fr:1573:ASTRID" username="ASTRID" password="ASTRID"
+              name="jdbc/astrid_ora"
+              auth="Container"
+              type="javax.sql.DataSource"
+              driverClassName="oracle.jdbc.driver.OracleDriver"
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              initialSize="1"
+              maxActive="10"
+              maxIdle="1"
+              maxWait="50"
+              removeAbandonedTimeout="60"
+    />-->
+</Context>
