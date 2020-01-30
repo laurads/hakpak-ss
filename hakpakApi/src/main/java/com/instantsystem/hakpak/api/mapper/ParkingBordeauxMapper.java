@@ -1,21 +1,23 @@
 package com.instantsystem.hakpak.api.mapper;
 
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
 import com.instantsystem.hakpak.api.parking.bordeaux.ParkingBordeaux;
 import com.instantsystem.hakpak.commons.dto.parking.ParkingDto;
 
-import fr.xebia.extras.selma.CollectionMappingStrategy;
-import fr.xebia.extras.selma.Field;
-import fr.xebia.extras.selma.IgnoreMissing;
-import fr.xebia.extras.selma.IoC;
-import fr.xebia.extras.selma.Mapper;
-import fr.xebia.extras.selma.Maps;
+@Component
+public class ParkingBordeauxMapper {
 
-@Mapper(withCollectionStrategy = CollectionMappingStrategy.ALLOW_GETTER, withIoC = IoC.SPRING, withIgnoreMissing = IgnoreMissing.ALL, withIoCServiceName = "parkingBordeauxMapper")
-public interface ParkingBordeauxMapper {
-
-	@Maps(withCustom = ParkingBordeauxInterceptor.class, withCustomFields = {
-			@Field({ "ParkingBordeaux.nom", "ParkingDto.nom" }),
-			@Field({ "ParkingBordeaux.nbPlacesLibres", "ParkingDto.nbPlacesLibres" }),
-			@Field({ "ParkingBordeaux.nbTotalPlaces", "ParkingDto.nbPlacesTotal" }) })
-	ParkingDto asParkingDto(ParkingBordeaux source);
+	public ParkingDto asParkingDto(ParkingBordeaux source) {
+		ParkingDto result = new ParkingDto();
+		result.setNom(source.getNom());
+		result.setNbPlacesLibres(source.getNbPlacesLibres());
+		result.setNbPlacesTotal(source.getNbTotalPlaces());
+		String position = source.getGeometry().getPoint().getPosition();
+		String[] gps = StringUtils.split(position, " ");
+		result.setLatitude(Double.parseDouble(gps[0].trim()));
+		result.setLongitude(Double.parseDouble(gps[1].trim()));
+		return result;
+	}
 }

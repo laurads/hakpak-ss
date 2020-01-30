@@ -34,11 +34,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.simpleframework</groupId>
 			<artifactId>simple-xml</artifactId>
 			<version>2.6.9</version>
@@ -47,13 +42,13 @@
 		<dependency>
 			<groupId>fr.xebia.extras</groupId>
 			<artifactId>selma</artifactId>
-			<scope>compile</scope>
+			<version>1.0</version>
 		</dependency>
 		<!-- Selma annotation processor -->
 		<dependency>
 			<groupId>fr.xebia.extras</groupId>
 			<artifactId>selma-processor</artifactId>
-			<scope>provided</scope>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -84,28 +79,23 @@
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
-			<scope>provided</scope>
+			<version>2.10.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<scope>provided</scope>
+			<version>4.3.9.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<scope>provided</scope>
+			<version>4.3.9.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
-			<scope>provided</scope>
+			<version>4.3.9.RELEASE</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-web 
-			<dependency> <groupId>org.springframework</groupId> <artifactId>spring-web</artifactId> 
-			<scope>provided</scope> </dependency> -->
-		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>javax.servlet-api</artifactId> 
-			<scope>provided</scope> </dependency> -->
 	</dependencies>
 
 	<build>

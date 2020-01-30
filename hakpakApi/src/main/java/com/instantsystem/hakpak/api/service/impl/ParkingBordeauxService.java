@@ -18,14 +18,17 @@ import com.instantsystem.hakpak.commons.helper.GpsHelper;
 public class ParkingBordeauxService implements ParkingService {
 
 	private ParkingBordeauxMapper parkingBordeauxMapper;
+	// private CacheManager cacheManager;
 
 	public ParkingBordeauxService(ParkingBordeauxMapper parkingBordeauxMapper) {
 		this.parkingBordeauxMapper = parkingBordeauxMapper;
+		// this.cacheManager = cacheManager;
 	}
 
 	@Override
-	@Cacheable(value = "parkings", key = "#ville", unless = "#result.parkings==null")
+	@Cacheable(value = "parkings", key = "#ville", unless = "#result==null")
 	public ParkingDataDto getParkingData(String ville) {
+		System.out.println("================================> CALL SERVICE");
 		final ParkingDataDto parkingDataDto = new ParkingDataDto();
 		getParkingBordeauxData().getFeatureMembers().forEach(f -> {
 			parkingDataDto.getParkings().add(this.parkingBordeauxMapper.asParkingDto(f.getParking()));
@@ -45,6 +48,18 @@ public class ParkingBordeauxService implements ParkingService {
 
 		return result;
 	}
+
+	/*
+	 * public void evictBordeauxCache() {
+	 * cacheManager.getCache("parkings").evict("bordeaux"); }
+	 */
+
+	/*
+	 * @Scheduled(fixedRate = 30000) public void
+	 * evictBordeauxParkingsCacheAtIntervals() { System.out.println(
+	 * "================================> CALL evictBordeauxParkingsCacheAtIntervals"
+	 * ); evictBordeauxCache(); }
+	 */
 
 	private ParkingBordeauxData getParkingBordeauxData() {
 		ParkingBordeauxRestTemplate restTemplate = new ParkingBordeauxRestTemplate();
