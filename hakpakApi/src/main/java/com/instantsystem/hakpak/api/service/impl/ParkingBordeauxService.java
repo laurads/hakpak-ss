@@ -40,9 +40,6 @@ public class ParkingBordeauxService implements ParkingService {
 		this.cacheManager = cacheManager;
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	@Cacheable(value = CACHE_NAME)
 	public ParkingDataDto getParkingData() {
@@ -61,10 +58,6 @@ public class ParkingBordeauxService implements ParkingService {
 		cacheManager.getCache(CACHE_NAME).clear();
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	private ParkingBordeauxData getParkingBordeauxData() {
 		LOGGER.debug("call exteranl API to get all parking data of {} (url: {})", CITY, apiParkingBordeauxUrl);
 
