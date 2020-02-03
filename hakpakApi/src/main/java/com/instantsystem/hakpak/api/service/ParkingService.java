@@ -4,7 +4,6 @@ import com.instantsystem.hakpak.commons.dto.parking.ParkingDataDto;
 
 public interface ParkingService {
 
-	ParkingDataDto getParkingData(String ville);
+	ParkingDataDto getParkingData();
 
-	ParkingDataDto getAroundParkingData(String ville, double lat, double lng, double dist);
 }

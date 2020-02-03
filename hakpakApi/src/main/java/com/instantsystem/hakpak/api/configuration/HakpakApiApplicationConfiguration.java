@@ -3,15 +3,12 @@ package com.instantsystem.hakpak.api.configuration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
-
-import com.instantsystem.hakpak.api.mapper.ParkingBordeauxMapper;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableAutoConfiguration
-@ComponentScan(basePackages = { "com.instantsystem.hakpak.commons.dto.parking", "com.instantsystem.hakpak.api" })
+@EnableScheduling
+@ComponentScan(basePackages = { "com.instantsystem.hakpak.commons.dto.parking" })
 @PropertySource("classpath:application.properties")
 public class HakpakApiApplicationConfiguration {
 
-	public ParkingBordeauxMapper parkingBordeauxMapper() {
-		return null;
-	}
 }

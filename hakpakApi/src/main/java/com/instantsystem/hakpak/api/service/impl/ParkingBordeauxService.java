@@ -1,69 +1,81 @@
 package com.instantsystem.hakpak.api.service.impl;
 
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.time.Duration;
+import java.time.LocalTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.instantsystem.hakpak.api.mapper.ParkingBordeauxMapper;
 import com.instantsystem.hakpak.api.parking.bordeaux.ParkingBordeauxData;
 import com.instantsystem.hakpak.api.service.ParkingService;
 import com.instantsystem.hakpak.commons.dto.parking.ParkingDataDto;
-import com.instantsystem.hakpak.commons.dto.parking.ParkingDto;
-import com.instantsystem.hakpak.commons.helper.GpsHelper;
 
 @Service
 public class ParkingBordeauxService implements ParkingService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ParkingBordeauxService.class);
+
+	private static final String CITY = "Bordeaux";
+	private static final String CACHE_NAME = "parkings-bordeaux";
+
+	@Value("${api.parking.bordeaux.url}")
+	private String apiParkingBordeauxUrl;
+
+	@Value("${api.client.http.connection.timeout}")
+	private int connectionTimeout;
+
+	@Value("${api.client.http.read.timeout}")
+	private int readTimeout;
 
 	private ParkingBordeauxMapper parkingBordeauxMapper;
-	// private CacheManager cacheManager;
+	private CacheManager cacheManager;
 
-	public ParkingBordeauxService(ParkingBordeauxMapper parkingBordeauxMapper) {
+	public ParkingBordeauxService(ParkingBordeauxMapper parkingBordeauxMapper, CacheManager cacheManager) {
 		this.parkingBordeauxMapper = parkingBordeauxMapper;
-		// this.cacheManager = cacheManager;
+		this.cacheManager = cacheManager;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
-	@Cacheable(value = "parkings", key = "#ville", unless = "#result==null")
-	public ParkingDataDto getParkingData(String ville) {
-		System.out.println("================================> CALL SERVICE");
+	@Cacheable(value = CACHE_NAME)
+	public ParkingDataDto getParkingData() {
 		final ParkingDataDto parkingDataDto = new ParkingDataDto();
+
 		getParkingBordeauxData().getFeatureMembers().forEach(f -> {
 			parkingDataDto.getParkings().add(this.parkingBordeauxMapper.asParkingDto(f.getParking()));
 		});
+
 		return parkingDataDto;
 	}
 
-	@Override
-	public ParkingDataDto getAroundParkingData(String ville, double lat, double lng, double dist) {
-		ParkingDataDto result = getParkingData(ville);
-		List<ParkingDto> parkings = result.getParkings();
-
-		Predicate<ParkingDto> aroundTo = parking -> GpsHelper.isAroundTo(lat, lng, parking.getLatitude(),
-				parking.getLongitude(), dist);
-
-		result.setParkings(parkings.stream().filter(aroundTo).collect(Collectors.toList()));
-
-		return result;
+	@Scheduled(fixedRateString = "${api.cache.eviction.rate}")
+	protected void evictCache() {
+		LOGGER.debug("Cache eviction: cache name={}", CACHE_NAME);
+		cacheManager.getCache(CACHE_NAME).clear();
 	}
 
-	/*
-	 * public void evictBordeauxCache() {
-	 * cacheManager.getCache("parkings").evict("bordeaux"); }
+	/**
+	 * 
+	 * @return
 	 */
-
-	/*
-	 * @Scheduled(fixedRate = 30000) public void
-	 * evictBordeauxParkingsCacheAtIntervals() { System.out.println(
-	 * "================================> CALL evictBordeauxParkingsCacheAtIntervals"
-	 * ); evictBordeauxCache(); }
-	 */
-
 	private ParkingBordeauxData getParkingBordeauxData() {
-		ParkingBordeauxRestTemplate restTemplate = new ParkingBordeauxRestTemplate();
-		final String url = "http://data.lacub.fr/wfs?key=9Y2RU3FTE8&SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=ST_PARK_P&SRSNAME=EPSG:4326";
-		return restTemplate.getForObject(url, ParkingBordeauxData.class);
+		LOGGER.debug("call exteranl API to get all parking data of {} (url: {})", CITY, apiParkingBordeauxUrl);
+
+		LocalTime startTime = LocalTime.now();
+		ParkingBordeauxRestTemplate restTemplate = new ParkingBordeauxRestTemplate(connectionTimeout, readTimeout);
+		LocalTime endTime = LocalTime.now();
+
+		ParkingBordeauxData response = restTemplate.getForObject(apiParkingBordeauxUrl, ParkingBordeauxData.class);
+		LOGGER.debug("Reception of response of exteranl API of parking data of {} (url: {}), Duration={}", CITY,
+				apiParkingBordeauxUrl, Duration.between(startTime, endTime));
+
+		return response;
 	}
 }

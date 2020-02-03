@@ -1,6 +1,11 @@
 package com.instantsystem.hakpak.commons.dto.parking;
 
-public class ParkingDto {
+import java.io.Serializable;
+
+public class ParkingDto implements Serializable {
+
+	private static final long serialVersionUID = 8173190387265454787L;
+
 	private String nom;
 	private double latitude;
 	private double longitude;
